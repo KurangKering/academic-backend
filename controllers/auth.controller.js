@@ -1,18 +1,24 @@
+"use strict";
+
 const bcrypt = require("bcryptjs");
-const response = require("../utils/response.util");
-const { User } = require("../models");
-const { secret, jwtExpiration } = require("../config/auth.config");
 const jwt = require("jsonwebtoken");
-const {
-  createRefreshToken,
-  verifyExpirationRefreshToken,
-} = require("../utils/jwt.utils");
+const path = require("path");
+const apiResponse = require(path.resolve("./utils/api-response.util"));
+const { User } = require(path.resolve("./models"));
+const { secret, jwtExpiration } = require(path.resolve("./config/jwt.config"));
+const { createRefreshToken, verifyExpirationRefreshToken } = require(path.resolve("./utils/jwt.utils"));
+
+
+exports.keepAlive = async(req, res) => {
+  return res.status(200).send(apiResponse(true, ""));
+
+};
 
 exports.login = async (req, res) => {
   const user = await User.findOne({ where: { username: req.body.username } });
 
   if (!user) {
-    return res.status(200).send(response(false, "User not found"));
+    return res.status(200).send(apiResponse(false, "User not found"));
   }
 
   const isValidPassword = await bcrypt.compare(
@@ -20,7 +26,7 @@ exports.login = async (req, res) => {
     user.password
   );
   if (!isValidPassword) {
-    return res.status(200).send(response(false, "Invalid password"));
+    return res.status(200).send(apiResponse(false, "Invalid password"));
   }
 
   const refreshToken = await createRefreshToken(user.username);
@@ -30,7 +36,7 @@ exports.login = async (req, res) => {
   });
 
   return res.status(200).send(
-    response(true, "Login Success", {
+    apiResponse(true, "Login Success", {
       username: user.username,
       role: user.role,
       accessToken: token,
@@ -41,7 +47,7 @@ exports.login = async (req, res) => {
 
 exports.refreshToken = async (req, res) => {
   if (!req.body["refresh-token"]) {
-    return res.status(200).send(response(false, "No refresh token provided"));
+    return res.status(200).send(apiResponse(false, "No refresh token provided"));
   }
 
   const user = await User.findOne({
@@ -51,7 +57,7 @@ exports.refreshToken = async (req, res) => {
   if (!user) {
     return res
       .status(200)
-      .send(response(false, "Refresh token not in database"));
+      .send(apiResponse(false, "Refresh token not in database"));
   }
 
   if (verifyExpirationRefreshToken(user.expire_token)) {
@@ -70,7 +76,7 @@ exports.refreshToken = async (req, res) => {
   const refreshToken = await createRefreshToken(user.username);
 
   return res.status(200).send(
-    response(true, "Token refreshed", {
+    apiResponse(true, "Token refreshed", {
       accessToken: token,
       refreshToken: refreshToken,
     })

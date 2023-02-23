@@ -1,0 +1,69 @@
+
+doctype html
+html(lang="en")
+  head
+    meta(charset='UTF-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title KHS
+
+    style.
+      body {
+        margin: -1px;
+      }
+      #wrapper {
+        margin: 2cm;
+      }
+
+      .header {
+        text-align: center;
+        font-size: 14pt;
+      }
+
+      .subheader {
+        text-align: center;
+        font-size: 14pt;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+  
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+
+      .table th, .table td {
+        border: 1px solid;
+      }
+
+
+  body
+    div#wrapper
+      h1.header DAFTAR KHS MAHASISWA <br/> TAHUN AJARAN #{tahunAjaran}
+      br
+
+      table.table
+        thead
+          tr
+            th No
+            th Kode MK
+            th Nama MK
+            th Semester
+            th Nilai Indeks
+            th Nilai Huruf
+
+        tbody 
+          each item, i in nilai
+            tr 
+              td.text-center #{i + 1}
+              td #{item.id_mk}
+              td #{item.nama_mk}
+              td.text-center #{item.semester_mk}
+              td.text-center #{item.nilai_huruf_nli}
+              td.text-center #{item.nilai_indeks_nli}
+
+
+

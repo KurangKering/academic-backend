@@ -1,3 +1,5 @@
+"use strict";
+
 const Roles = {
   Mahasiswa: "dosen",
   Dosen: "dosen"

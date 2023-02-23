@@ -1,10 +1,11 @@
 "use strict";
 
 const jwt = require("jsonwebtoken");
-const { secret } = require("../config/auth.config");
-const User = require("../models").User;
-const response = require("../utils/response.util");
 const { TokenExpiredError } = jwt;
+const path = require("path");
+const { secret } = require(path.resolve("./config/jwt.config"));
+const User = require(path.resolve("./models")).User;
+const apiResponse = require(path.resolve("./utils/api-response.util"));
 
 const hasToken = (req) => {
   const token = req.headers["x-access-token"];
@@ -49,7 +50,7 @@ exports.isAllowed = (...roles) => {
     const token = hasToken(req);
 
     if (!token.success) {
-      return res.status(token.code).send(response(false, token.message));
+      return res.status(token.code).send(apiResponse(false, token.message));
     }
 
     const user = await User.findOne({
@@ -57,11 +58,11 @@ exports.isAllowed = (...roles) => {
     });
 
     if (!user) {
-      return res.status(403).send(response(false, "User not found"));
+      return res.status(403).send(apiResponse(false, "User not found"));
     }
 
     if (roles && !roles.includes(user.role)) {
-      return res.status(403).send(response(false, "Permission denied"));
+      return res.status(403).send(apiResponse(false, "Permission denied"));
     }
     req.app.locals.user = user;
     next();

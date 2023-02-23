@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Kurikulum.init({
     id_krkm: DataTypes.INTEGER,
     nama_krkm: DataTypes.STRING,
-    id_jrs_krkm: DataTypes.STRING
+    id_jrs: DataTypes.STRING
   }, {
     sequelize,
     modelName: "Kurikulum",

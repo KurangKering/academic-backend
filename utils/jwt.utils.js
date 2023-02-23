@@ -1,8 +1,9 @@
 "use strict";
 
-const { jwtRefreshExpiration } = require("../config/auth.config");
 const { v4: uuidv4 } = require("uuid");
-const { User } = require("../models");
+const path = require("path");
+const { jwtRefreshExpiration } = require(path.resolve("./config/jwt.config"));
+const { User } = require(path.resolve("./models"));
 
 exports.createRefreshToken = async (username) => {
   const expiredAt = new Date();
@@ -10,7 +11,7 @@ exports.createRefreshToken = async (username) => {
 
   const _token = uuidv4();
 
-  const refreshToken = await User.update(
+  await User.update(
     {
       refresh_token: _token,
       expire_token: expiredAt.getTime(),

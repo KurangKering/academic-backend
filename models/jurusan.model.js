@@ -14,14 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Jurusan.init({
-    id_jrs: DataTypes.STRING,
+    id_jrs: {type: DataTypes.STRING, primaryKey: true},
     nama_jrs: DataTypes.STRING,
-    id_jrs_induk_jrs: DataTypes.STRING,
+    id_induk_jrs: DataTypes.STRING,
     tipe_jrs: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: "Jurusan",
-    tableName: "jurusan"
+    tableName: "jurusan",
+    timestamps: false,
   });
   return Jurusan;
 };

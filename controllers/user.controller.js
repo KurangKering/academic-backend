@@ -1,7 +1,8 @@
 "use strict";
 
-const { Mahasiswa, Dosen } = require("../models");
-const response = require("../utils/response.util");
+const path = require("path");
+const { Mahasiswa, Dosen } = require(path.resolve("./models"));
+const apiResponse = require(path.resolve("./utils/api-response.util"));
 
 exports.account = async (req, res) => {
   const user = req.app.locals.user;
@@ -9,14 +10,25 @@ exports.account = async (req, res) => {
 
   switch (user.role) {
     case "mahasiswa":
-      account = await Mahasiswa.findOne({ where: { id_mhs: user.username } });
+      account = await Mahasiswa.findOne({
+        nest: true,
+        where: { id_mhs: user.username },
+        include: [
+          { association: "jurusan" },
+          { association: "pembimbing", include: [{ association: "jurusan" }], required: false },
+        ],
+      });
       break;
     case "dosen":
-      account = await Dosen.findOne({ where: { id_dsn: user.username } });
+      account = await Dosen.findOne({
+        nest: true,
+        where: { id_dsn: user.username },
+        include: [{ association: "jurusan" }],
+      });
       break;
     default:
       break;
   }
 
-  return res.send(response(true, "Account retrieved", account));
+  return res.send(apiResponse(true, "Account retrieved", account));
 };

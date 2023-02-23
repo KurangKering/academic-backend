@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Kelas.init({
     id_kls: DataTypes.INTEGER,
     nama_kls: DataTypes.STRING,
-    id_jrs_kls: DataTypes.STRING
+    id_jrs: DataTypes.STRING
   }, {
     sequelize,
     modelName: "Kelas",

@@ -1,7 +1,8 @@
 "use strict";
 
-const { Mahasiswa, Dosen, KuliahMhs } = require("../models");
-const response = require("../utils/response.util");
+const path = require("path");
+const { Mahasiswa, Dosen } = require(path.resolve("./models"));
+const apiResponse = require(path.resolve("./utils/api-response.util"));
 
 exports.account = async (req, res) => {
   const user = req.app.locals.user;
@@ -18,5 +19,5 @@ exports.account = async (req, res) => {
       break;
   }
 
-  return res.send(response(true, "Account retrieved", account));
+  return res.send(apiResponse(true, "Account retrieved", account));
 };
